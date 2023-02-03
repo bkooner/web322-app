@@ -11,8 +11,8 @@
 
 const express = require("express");
 const path = require("path");
-const { initialize, getAllPosts,getPublishedPosts, getCategories} = require('./blog-service.js');
 const app = express();
+const { initialize, getAllPosts,getPublishedPosts, getCategories} = require('./blog-service.js');
 
 app.use(express.static(path.join(__dirname, 'public'))); 
 const HTTP_PORT = process.env.PORT || 8080;
