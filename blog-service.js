@@ -22,8 +22,6 @@ function initialize () {
     });
   });
 }
-
-
 function getAllPosts () {
   return new Promise((resolve, reject) => {
     if (posts.length === 0) {
@@ -33,8 +31,6 @@ function getAllPosts () {
     }
   })
 }
-
-
 function getPublishedPosts() {
   return new Promise((resolve, reject) => {
     let publishedPosts = posts.filter((post) => post.published === true);
@@ -46,8 +42,6 @@ function getPublishedPosts() {
     }
   })    
 }
-
-
 function getCategories() {
   return new Promise((resolve, reject) => {
     if (categories.length === 0) {
@@ -57,4 +51,4 @@ function getCategories() {
     }
   })
 }
-module.exports = { initialize, getAllPosts, getCategories,getPublishedPosts};
+module.exports = { initialize, getAllPosts,getPublishedPosts, getCategories};

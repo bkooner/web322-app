@@ -5,18 +5,16 @@
 * 
 *  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-02
 *
-*  Online (Cyclic) Link: ________________________________________________________
+*  Online (Cyclic) Link: 
 *
 ********************************************************************************/ 
 
 const express = require("express");
 const path = require("path");
-const { initialize, getAllPosts, getCategories,getPublishedPosts } = require('./blog-service.js');
-
+const { initialize, getAllPosts,getPublishedPosts, getCategories} = require('./blog-service.js');
 const app = express();
-// Use express.static middleware for static files
-app.use(express.static(path.join(__dirname, 'public'))); 
 
+app.use(express.static(path.join(__dirname, 'public'))); 
 const HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart() {
@@ -56,5 +54,5 @@ app.use((req, res) => {
 initialize().then(() => {
   app.listen(HTTP_PORT, onHttpStart());
 }).catch (() => {
-    console.log('promises failed');
+    console.log('Error');
 });
