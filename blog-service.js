@@ -1,47 +1,63 @@
-const express = require('express');
 const fs = require('fs');
-const app = express();
+const path = require("path");
+
 
 let posts = [];
 let categories = [];
 
-fs.readFile('./data/posts.json', 'utf-8', (err, data) => {
-  if (err) throw err;
-  posts = JSON.parse(data);
-});
+function initialize() {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path.join(__dirname, "data", "posts.json"), 'utf8', (err, data) => {
+      if (err) {
+        reject(new Error("Unable to read file"));
+      } else {
+        posts = JSON.parse(data);
+        fs.readFile(path.join(__dirname, "data", "categories.json"), 'utf8', (err, categoriesData) => {
+          if (err) {
+            reject(new Error("Unable to read file"));
+          } else {
+            categories = JSON.parse(categoriesData);
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
 
-fs.readFile('./data/categories.json', 'utf-8', (err, data) => {
-  if (err) throw err;
-  categories = JSON.parse(data);
-});
 
-app.use(express.static('public'));
+function getAllPosts() {
+  return new Promise((resolve, reject) => {
+    if (posts.length === 0) {
+      reject("No results returned");
+    } else {
+      resolve(posts);
+    }
+  })
+}
 
-app.get('/', (req, res) => {
-  res.redirect('/about');
-});
 
-app.get('/about', (req, res) => {
-  res.sendFile(__dirname + '/views/about.html');
-});
+function getPublishedPosts() {
+  return new Promise((resolve, reject) => {
+    let publishedPosts = posts.filter((post) => post.published === true);
+    
+    if (publishedPosts.length > 0) {
+      resolve(publishedPosts);
+    } else {
+      reject("No results returned");
+    }
+  })    
+}
 
-app.get('/blog', (req, res) => {
-  const publishedPosts = posts.filter(post => post.published === true);
-  res.json(publishedPosts);
-});
 
-app.get('/data/posts.json', (req, res) => {
-  res.json(posts);
-});
+function getCategories() {
+  return new Promise((resolve, reject) => {
+    if (categories.length === 0) {
+      reject("No results returned");
+    } else {
+      resolve(categories);
+    }
+  })
+}
 
-app.get('/data/categories.json', (req, res) => {
-  res.json(categories);
-});
-
-app.use((req, res) => {
-  res.status(404).send('Page Not Found');
-});
-
-const server = app.listen(process.env.PORT || 8080, () => {
-  console.log(`Express http server listening on ${server.address().port}`);
-});
+module.exports = { initialize, getAllPosts, getCategories,getPublishedPosts };
