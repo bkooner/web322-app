@@ -1,11 +1,9 @@
 const fs = require('fs');
 const path = require("path");
-
-
 let posts = [];
 let categories = [];
 
-function initialize() {
+function initialize () {
   return new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, "data", "posts.json"), 'utf8', (err, data) => {
       if (err) {
@@ -26,7 +24,7 @@ function initialize() {
 }
 
 
-function getAllPosts() {
+function getAllPosts () {
   return new Promise((resolve, reject) => {
     if (posts.length === 0) {
       reject("No results returned");
@@ -59,5 +57,4 @@ function getCategories() {
     }
   })
 }
-
-module.exports = { initialize, getAllPosts, getCategories,getPublishedPosts };
+module.exports = { initialize, getAllPosts, getCategories,getPublishedPosts};

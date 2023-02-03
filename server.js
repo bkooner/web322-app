@@ -1,13 +1,27 @@
+/*********************************************************************************
+*  WEB322 – Assignment 02
+*  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
+*  (including 3rd party web sites) or distributed to other students.
+* 
+*  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-02
+*
+*  Online (Cyclic) Link: ________________________________________________________
+*
+********************************************************************************/ 
+
 const express = require("express");
 const path = require("path");
-const { initialize, getAllPosts, getCategories,getPublishedPosts } = require("./blog-service.js");
+const { initialize, getAllPosts, getCategories,getPublishedPosts } = require('./blog-service.js');
 
 const app = express();
-
 // Use express.static middleware for static files
 app.use(express.static(path.join(__dirname, 'public'))); 
 
 const HTTP_PORT = process.env.PORT || 8080;
+
+function onHttpStart() {
+  console.log("Express http server listening on: " + HTTP_PORT);
+}
 
 app.get("/", (req, res) => {
   res.redirect("/about");
@@ -23,13 +37,13 @@ app.get("/blog", (req, res) => {
     .catch(err => res.status(500).send(err.message));
 });
 
-app.get("/posts.json", (req, res) => {
+app.get("/posts", (req, res) => {
   getAllPosts()
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err.message));
 });
 
-app.get("/categories.json", (req, res) => {
+app.get("/categories", (req, res) => {
   getCategories()
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err.message));
@@ -40,7 +54,7 @@ app.use((req, res) => {
 });
 
 initialize().then(() => {
-  app.listen(HTTP_PORT, () => {
-    console.log(`Express http server listening on: ${HTTP_PORT}`);
-  });
+  app.listen(HTTP_PORT, onHttpStart());
+}).catch (() => {
+    console.log('promises failed');
 });
