@@ -7,12 +7,12 @@ function initialize () {
   return new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, "data", "posts.json"), 'utf8', (err, data) => {
       if (err) {
-        reject(new Error("Unable to read file"));
+        reject(new Error("File Not Read"));
       } else {
         posts = JSON.parse(data);
         fs.readFile(path.join(__dirname, "data", "categories.json"), 'utf8', (err, categoriesData) => {
           if (err) {
-            reject(new Error("Unable to read file"));
+            reject(new Error("File Not Read"));
           } else {
             categories = JSON.parse(categoriesData);
             resolve();
@@ -25,7 +25,7 @@ function initialize () {
 function getAllPosts () {
   return new Promise((resolve, reject) => {
     if (posts.length === 0) {
-      reject("No results returned");
+      reject("No data returned");
     } else {
       resolve(posts);
     }
@@ -38,14 +38,14 @@ function getPublishedPosts() {
     if (publishedPosts.length > 0) {
       resolve(publishedPosts);
     } else {
-      reject("No results returned");
+      reject("No data returned");
     }
   })    
 }
 function getCategories() {
   return new Promise((resolve, reject) => {
     if (categories.length === 0) {
-      reject("No results returned");
+      reject("No data returned");
     } else {
       resolve(categories);
     }
