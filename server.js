@@ -24,7 +24,9 @@ function onHttpStart() {
 app.get("/", (req, res) => {
   res.redirect("/about");
 });
-
+app.get('/posts/add', (req, res) => {
+  res.sendFile(path.join(__dirname, '/views/addPost.html'));
+});
 app.get("/about", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "about.html"));
 });
