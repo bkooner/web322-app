@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 02
+*  WEB322 – Assignment 03
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
@@ -18,9 +18,9 @@ const app = express();
 const blog = require('./blog-service.js');
 
 cloudinary.config({
-  cloud_name: 'Cloud Name',
-  api_key: 'API Key',
-  api_secret: 'API Secret',
+  cloud_name: 'degkhmpl4',
+  api_key: '622939466967177',
+  api_secret: '6fLZp1wP7VicO44VJ-jjgDybO_8',
   secure: true
 });
 
@@ -92,10 +92,22 @@ blog.initialize().then(() => {
 });
 
 app.get("/posts", (req, res) => {
-  blog.getAllPosts()
-    .then(data => res.send(data))
-    .catch(err => res.send(err.message));
-});
+  let queryPromise = null;
+
+    if (req.query.category) {
+        queryPromise = blog.getPostsByCategory(req.query.category);
+    } else if (req.query.minDate) {
+        queryPromise = blog.getPostsByMinDate(req.query.minDate);
+    } else {
+        queryPromise = blog.getAllPosts()
+    }
+
+    queryPromise.then(data => {
+        res.render('posts', { posts: data });
+    }).catch(err => {
+        res.json({ message: err });
+    })
+  });
 
 app.get("/blog", (req, res) => {
   blog.getPublishedPosts()

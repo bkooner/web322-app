@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 02
+*  WEB322 – Assignment 03
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
@@ -62,6 +62,43 @@ function getCategories() {
   })
 }
 
+ function getPostsByCategory(category) {
+  return new Promise((resolve, reject) => {
+      let filteredPosts = posts.filter(post => post.category == category);
+
+      if (filteredPosts.length == 0) {
+          reject("no results found")
+      } else {
+          resolve(filteredPosts);
+      }
+  });
+}
+
+ function getPostsByMinDate (minDateStr) {
+  return new Promise((resolve, reject) => {
+      let filteredPosts = posts.filter(post => (new Date(post.postDate)) >= (new Date(minDateStr)))
+
+      if (filteredPosts.length == 0) {
+          reject("no results found")
+      } else {
+          resolve(filteredPosts);
+      }
+  });
+}
+
+ function getPostById(id) {
+  return new Promise((resolve, reject) => {
+      let foundPost = posts.find(post => post.id == id);
+
+      if (foundPost) {
+          resolve(foundPost);
+      } else {
+          reject("no result found");
+      }
+  });
+}
+
+
  function addPost(postData) {
   return new Promise((resolve, reject) => {
       postData.published = postData.published ? true : false;
@@ -72,4 +109,4 @@ function getCategories() {
 }
 
 
-module.exports = { initialize, getAllPosts,getPublishedPosts, getCategories, addPost};
+module.exports = { initialize, getAllPosts,getPublishedPosts, getCategories, getPostsByMinDate ,addPost,getPostsByCategory,getPostById};
