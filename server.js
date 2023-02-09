@@ -40,6 +40,24 @@ app.get('/posts/add', (req, res) => {
   res.sendFile(path.join(__dirname, '/views/addPost.html'));
 });
 
+app.get("/posts", (req, res) => {
+  let queryPromise = null;
+
+    if (req.query.category) {
+        queryPromise = blog.getPostsByCategory(req.query.category);
+    } else if (req.query.minDate) {
+        queryPromise = blog.getPostsByMinDate(req.query.minDate);
+    } else {
+        queryPromise = blog.getAllPosts()
+    }
+
+    queryPromise.then(data => {
+        res.render('posts', { posts: data });
+    }).catch(err => {
+        res.json({ message: err });
+    })
+  });
+
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
@@ -66,15 +84,20 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
   
   upload(req).then((uploaded)=>{
       req.body.featureImage = uploaded.url;
-      
-      
-      blog.addPost(req.body).then(post => {
-        res.redirect("/posts");
+  });
+  } else {
+    processPost("");
+  }
+  function processPost(imageUrl) {
+    req.body.featureImage = imageUrl;
+    blog.addPost(req.body).then(post => {
+    res.redirect("/posts");
     }).catch(err => {
         res.status(500).send(err);
     })
-  })
-}});
+  }
+});
+
 
 app.get('/posts/add', (req, res) => {
   res.render('addPost');
@@ -90,24 +113,6 @@ blog.initialize().then(() => {
 .catch (() => {
     console.log('Error');
 });
-
-app.get("/posts", (req, res) => {
-  let queryPromise = null;
-
-    if (req.query.category) {
-        queryPromise = blog.getPostsByCategory(req.query.category);
-    } else if (req.query.minDate) {
-        queryPromise = blog.getPostsByMinDate(req.query.minDate);
-    } else {
-        queryPromise = blog.getAllPosts()
-    }
-
-    queryPromise.then(data => {
-        res.render('posts', { posts: data });
-    }).catch(err => {
-        res.json({ message: err });
-    })
-  });
 
 app.get("/blog", (req, res) => {
   blog.getPublishedPosts()
