@@ -10,9 +10,21 @@
 ********************************************************************************/ 
 
 const express = require("express");
+const multer = require("multer");
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
 const path = require("path");
 const app = express();
 const blog = require('./blog-service.js');
+
+cloudinary.config({
+  cloud_name: 'Cloud Name',
+  api_key: 'API Key',
+  api_secret: 'API Secret',
+  secure: true
+});
+
+const upload = multer();
 
 app.use(express.static(path.join(__dirname, 'public'))); 
 const HTTP_PORT = process.env.PORT || 8080;
@@ -27,6 +39,47 @@ app.get("/", (req, res) => {
 app.get('/posts/add', (req, res) => {
   res.sendFile(path.join(__dirname, '/views/addPost.html'));
 });
+
+app.post("/posts/add", upload.single("featureImage"), (req, res) => {
+  if (req.file) {
+    let streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+          let stream = cloudinary.uploader.upload_stream(
+              (error, result) => {
+              if (result) {
+                  resolve(result);
+              } else {
+                  reject(error);
+              }
+              }
+          );
+  
+          streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+  };
+  
+  async function upload(req) {
+      let result = await streamUpload(req);
+      console.log(result);
+      return result;
+  }
+  
+  upload(req).then((uploaded)=>{
+      req.body.featureImage = uploaded.url;
+      
+      
+      blog.addPost(req.body).then(post => {
+        res.redirect("/posts");
+    }).catch(err => {
+        res.status(500).send(err);
+    })
+  })
+}});
+
+app.get('/posts/add', (req, res) => {
+  res.render('addPost');
+});
+
 app.get("/about", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "about.html"));
 });
