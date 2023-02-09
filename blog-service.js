@@ -88,10 +88,10 @@ function getCategories() {
 
  function getPostById(id) {
   return new Promise((resolve, reject) => {
-      let foundPost = posts.find(post => post.id == id);
+      let postFound = posts.find(post => post.id == id);
 
-      if (foundPost) {
-          resolve(foundPost);
+      if (postFound) {
+          resolve(postFound);
       } else {
           reject("no result found");
       }
