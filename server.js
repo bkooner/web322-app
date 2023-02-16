@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
   res.redirect("/about");
 });
 app.get('/posts/add', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/addPost.html'));
+  res.sendFile(path.join(__dirname, 'views','addPost.html'));
 });
 
 app.get("/posts", (req, res) => {
@@ -48,17 +48,21 @@ app.get("/posts", (req, res) => {
     } else if (req.query.minDate) {
         queryPromise = blog.getPostsByMinDate(req.query.minDate);
     } else {
-        queryPromise = blog.getAllPosts()
+        queryPromise = blog.getAllPosts();
     }
 
     queryPromise.then(data => {
-        res.render('posts', { posts: data });
+        //res.render('posts', { posts: data });
+        res.json(data);
     }).catch(err => {
         res.json({ message: err });
     })
   });
 
+  
+
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
+  
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
@@ -86,21 +90,33 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
       req.body.featureImage = uploaded.url;
   });
   } else {
-    processPost("");
+    addingPost("");
   }
-  function processPost(imageUrl) {
-    req.body.featureImage = imageUrl;
-    blog.addPost(req.body).then(post => {
-    res.redirect("/posts");
-    }).catch(err => {
-        res.status(500).send(err);
+  function addingPost(postingImage) {
+    req.body.featureImage = postingImage;
+    if (!req.body.published) {
+      req.body.published = false;
+    } else {
+      req.body.published = true;
+    }
+    req.body.id = blog.posts.length + 1;
+    blog.addPost(req.body).then(() => {
+      res.redirect("/posts");
+    }).catch((err) => {
+      res.status(500).send(err);
     })
   }
 });
 
-
-app.get('/posts/add', (req, res) => {
-  res.render('addPost');
+app.post('/posts/add', (req, res) => {
+  const postData = req.body;
+  blog.addPost(postData)
+    .then(() => {
+      res.redirect("/posts");
+    })
+    .catch((err) => {
+      res.status(500).send("Error adding post: " + err.message);
+    });
 });
 
 app.get("/about", (req, res) => {
@@ -129,3 +145,14 @@ app.get("/categories", (req, res) => {
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
 });
+
+app.get('/post/:id', (req, res) => {
+  blog.getPostById(req.params.id)
+    .then(post => {
+      res.json(post);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+

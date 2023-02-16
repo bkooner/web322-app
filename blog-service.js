@@ -68,35 +68,40 @@ function getCategories() {
       let filteredPosts = posts.filter(post => (new Date(post.postDate)) >= (new Date(minDateStr)))
 
       if (filteredPosts.length == 0) {
-          reject("No Result Found")
+          reject("No results returned")
       } else {
           resolve(filteredPosts);
       }
   });
 }
 
-function addPost(postData) {
+function addPost(postData, res) {
   return new Promise((resolve, reject) => {
       postData.published = postData.published ? true : false;
       postData.id = posts.length + 1;
       posts.push(postData);
       resolve();
+  })
+  .then(() => {
+      res.redirect('/posts');
+  })
+  .catch((error) => {
+      res.status(500).send(error.message);
   });
 }
+
 
 function getPostsByCategory(category) {
   return new Promise((resolve, reject) => {
       let filteredPosts = posts.filter(post => post.category == category);
 
       if (filteredPosts.length == 0) {
-          reject("No Result Found")
+          reject("No results returned")
       } else {
           resolve(filteredPosts);
       }
   });
 }
-
-
  function getPostById(id) {
   return new Promise((resolve, reject) => {
       let postFound = posts.find(post => post.id == id);
@@ -104,7 +109,7 @@ function getPostsByCategory(category) {
       if (postFound) {
           resolve(postFound);
       } else {
-          reject("No Result Found");
+          reject("No result returned");
       }
   });
 }
