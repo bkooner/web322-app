@@ -3,7 +3,7 @@
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-02
+*  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-19
 *
 *  Online (Cyclic) Link: https://cautious-buckle-colt.cyclic.app
 *
@@ -36,22 +36,27 @@ function onHttpStart() {
 app.get("/", (req, res) => {
   res.redirect("/about");
 });
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "about.html"));
+});
+
 app.get('/posts/add', (req, res) => {
   res.sendFile(path.join(__dirname, 'views','addPost.html'));
 });
 
 app.get("/posts", (req, res) => {
-  let queryPromise = null;
+  let queryForPost = null;
 
     if (req.query.category) {
-        queryPromise = blog.getPostsByCategory(req.query.category);
+      queryForPost = blog.getPostsByCategory(req.query.category);
     } else if (req.query.minDate) {
-        queryPromise = blog.getPostsByMinDate(req.query.minDate);
+      queryForPost = blog.getPostsByMinDate(req.query.minDate);
     } else {
-        queryPromise = blog.getAllPosts();
+      queryForPost = blog.getAllPosts();
     }
 
-    queryPromise.then(data => {
+    queryForPost.then(data => {
         //res.render('posts', { posts: data });
         res.json(data);
     }).catch(err => {
@@ -59,11 +64,8 @@ app.get("/posts", (req, res) => {
     })
   });
 
-  
-
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
   
-  if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
           let stream = cloudinary.uploader.upload_stream(
@@ -73,12 +75,12 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
               } else {
                   reject(error);
               }
-              }
+            }
           );
   
           streamifier.createReadStream(req.file.buffer).pipe(stream);
       });
-  };
+    };
   
   async function upload(req) {
       let result = await streamUpload(req);
@@ -88,39 +90,27 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
   
   upload(req).then((uploaded)=>{
       req.body.featureImage = uploaded.url;
+      
+      blog.addPost(req.body).then(()=>{
+      res.redirect("/posts");
+      
+    }).catch(err=>{
+        res.status(500).send(err);
+    })
+  }).catch((err) => {
+    res.send(err);
   });
-  } else {
-    addingPost("");
-  }
-  function addingPost(postingImage) {
-    req.body.featureImage = postingImage;
-    if (!req.body.published) {
-      req.body.published = false;
-    } else {
-      req.body.published = true;
-    }
-    req.body.id = blog.posts.length + 1;
-    blog.addPost(req.body).then(() => {
-      res.redirect("/posts");
-    }).catch((err) => {
-      res.status(500).send(err);
-    })
-  }
+
 });
 
-app.post('/posts/add', (req, res) => {
-  const postData = req.body;
-  blog.addPost(postData)
-    .then(() => {
-      res.redirect("/posts");
-    })
-    .catch((err) => {
-      res.status(500).send("Error adding post: " + err.message);
-    });
-});
-
-app.get("/about", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "about.html"));
+app.get("/posts/add", async (req, res) => {
+  try {
+    const postData = req.body;
+    await blog.addPost(postData);
+    res.redirect('/posts');
+  } catch (error) {
+    res.render({ message: err } );
+  }
 });
 
 blog.initialize().then(() => {
@@ -142,17 +132,16 @@ app.get("/categories", (req, res) => {
     .catch(err => res.send(err.message));
 });
 
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
-});
 
-app.get('/post/:id', (req, res) => {
+app.get('/post/:value', (req, res) => {
   blog.getPostById(req.params.id)
-    .then(post => {
-      res.json(post);
-    })
-    .catch(err => {
+    .then(data => {
+      res.json(data);
+    }).catch(err => {
       res.status(500).send(err);
     });
 });
 
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
+});

@@ -3,7 +3,7 @@
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-02
+*  Name: Bhawanjot Singh Kooner Student ID: 167834217 Date: 2023-02-19
 *
 *  Online (Cyclic) Link: https://cautious-buckle-colt.cyclic.app
 *
@@ -65,44 +65,39 @@ function getCategories() {
 
  function getPostsByMinDate (minDateStr) {
   return new Promise((resolve, reject) => {
-      let filteredPosts = posts.filter(post => (new Date(post.postDate)) >= (new Date(minDateStr)))
+      let postByDate = posts.filter(post => (new Date(post.postDate)) >= (new Date(minDateStr)))
 
-      if (filteredPosts.length == 0) {
+      if (postByDate.length == 0) {
           reject("No results returned")
       } else {
-          resolve(filteredPosts);
+          resolve(postByDate);
       }
   });
 }
 
-function addPost(postData, res) {
+function addPost(postData) {
   return new Promise((resolve, reject) => {
       postData.published = postData.published ? true : false;
       postData.id = posts.length + 1;
       posts.push(postData);
-      resolve();
-  })
-  .then(() => {
-      res.redirect('/posts');
-  })
-  .catch((error) => {
-      res.status(500).send(error.message);
+      resolve(postData);
   });
 }
 
 
 function getPostsByCategory(category) {
   return new Promise((resolve, reject) => {
-      let filteredPosts = posts.filter(post => post.category == category);
+      let postsByCategory = posts.filter(post => post.category == category);
 
-      if (filteredPosts.length == 0) {
+      if (postsByCategory.length == 0) {
           reject("No results returned")
       } else {
-          resolve(filteredPosts);
+          resolve(postsByCategory);
       }
   });
 }
- function getPostById(id) {
+
+function getPostById(id) {
   return new Promise((resolve, reject) => {
       let postFound = posts.find(post => post.id == id);
 
