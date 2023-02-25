@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,7 +13,7 @@
       <link rel="stylesheet" href="https://bootswatch.com/3/slate/bootstrap.min.css" />
 
       
-      <title>About</title>
+      <title>Bhawanjot Singh Kooner's Blog</title>
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -34,49 +33,18 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/blog">Blog</a></li>
-            <li class="active"><a href="/about">About</a></li>
+            <li>{{#navLink "/about"}}About{{/navLink}}</li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/posts">Posts</a></li>
-            <li><a href="/categories">Categories</a></li>
-          	<li><a href="/posts/add">Add Post</a></li>            
+            <li>{{#navLink "/posts"}}Posts{{/navLink}}</li>
+            <li>{{#navLink "/categories"}}Categories{{/navLink}}</li>
+            <li>{{#navLink "/posts/add"}}Add Post{{/navLink}}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
     <div class="container" style="padding-top:60px">
-      <div class="row">
-        <section class="main col-md-9">
-          <article>
-          <h2>About</h2>
-          <p class="">
-            I am studying Computer Programming (CPP) at Seneca College since from May 2022. I am an
-            international student came from Punjab, India. WEB222 has been one of my favorite
-            subjects because it helps me learn to build a website.
-          </p>
-          <p>Now, I am studying WEB322 where I am learning to use the framework and tools for web applications.</p>
-          </article>
-          <span><b>Date:</b> February 2, 2023</span>
-
-          <div class="education">
-            <h3>Education</h3>
-            <div>
-              <div class="card1">
-                <h4>Diploma in Computer Programming | <i>Seneca College</i></h4>
-                <span class="">2022-2023 (expected) </span>
-                <p class="">
-                  I am currently pursuing my Diploma in Computer Programming from Seneca college. Here I
-                  have learned various programming languages like C, C++, Javascript etc.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <aside class="col-md-3">
-          <h2>Coming Soon</h2>
-          <p>Updates regarding my progress and projects will be posted soon.</p>
-        </aside>
-      </div>
+      {{{body}}}
     </div>
 
     <!-- Latest compiled and minified jQuery 3.6.0 JavaScript -->
