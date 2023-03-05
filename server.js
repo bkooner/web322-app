@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 03
+*  WEB322 – Assignment 04
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
@@ -47,25 +47,18 @@ app.engine('.hbs',exphbs.engine({
     },
     safeHTML: function(context){
       return stripJs(context);
-  }  
-    
-    }
-  }));
-
-
+    }  
+  }
+}));
 
 app.set('view engine', '.hbs');
 
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static("public"));
 const HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
-
-app.get("/", (req, res) => {
-  res.redirect("/about");
-});
 
 app.get("/", (req, res)=> {
   res.redirect("/blog");
@@ -73,10 +66,6 @@ app.get("/", (req, res)=> {
 
 app.get('/about', (req, res) => {
   res.render('about');
-});
-
-app.get('/posts/add', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views','addPost.html'));
 });
 
 app.get("/posts", (req, res) => {
@@ -280,5 +269,5 @@ app.get('/post/:value', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
+  res.status(404).render('pageNotFound');
 });

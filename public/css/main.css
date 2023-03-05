@@ -1,34 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Alexandria:wght@300&family=Noto+Sans&display=swap");
-body {
-  font-family: 'Nato Scans', sans-serif;
-}
 
-.navbar {
-  background-color: #333333;
-  border: none;
+body {
+  font-family: 'Alexandria', serif;
 }
 
 .navbar-brand {
-  color: #fff;
   font-size: 24px;
   font-weight: bold;
 }
 
-.navbar-brand:hover {
-  color: #fff;
-}
-
 .navbar-nav > li > a {
-  color: #fff;
   font-size: 18px;
 }
 
 .main {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
+  padding: 25px;
 }
 
 .main h2 {
-  font-size: 36px;
+  font-size: 32px;
+  margin-top: 5px; 
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -40,7 +32,7 @@ body {
 
 .main span {
   display: block;
-  margin-top: 30px;
+  margin-top: 25px;
   font-size: 16px;
   color: #a8a7a7;
 }
@@ -48,26 +40,68 @@ body {
 .education h3 {
   font-size: 24px;
   font-weight: bold;
-  margin-top: 50px;
+  margin-top: 40px;
   margin-bottom: 20px;
+  color: #fff;
 }
+
+aside {
+  background-color: #3a3939;
+  box-shadow: 0 0 10px rgb(19, 19, 19, 0.5);
+  padding: 20px;
+  border-radius: 5px;
+  transition: all 0.5s ease;
+}
+
+aside h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px #000;
+}
+
+aside p {
+  color: #a8a7a7;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+aside:hover {
+  box-shadow: 0 0 15px rgb(0, 0, 0, 0.7);
+  background-color: #2c2b2b;
+  transition: background-color 0.5s ease;
+  
+}
+
 
 .card1 {
     border-radius: 5px;
-    box-shadow: 2px 2px 8px 4px rgb(154, 154, 158);
+    box-shadow: 2px 2px 10px 4px rgb(190, 187, 187, 0.4);
     padding: 10px;
     margin-bottom: 30px;
+    background-color: #303030;
+}
+
+.card1:hover {
+    box-shadow: 4px 4px 30px 6px rgb(0,0,0,0.6);
+    background-color: #2c2b2b;
+    transition: background-color 0.5s ease;
 }
 
 .card1 h4 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #f2efef;
 }
 
 .card1 p {
   font-size: 16px;
   line-height: 1.5;
+  color: #f2efef;;
 }
 
-
+table tr:hover {
+  background-color: #292828;
+  transition: background-color 0.1s ease-in-out;
+}

@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 03
+*  WEB322 – Assignment 04
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
@@ -79,6 +79,10 @@ function addPost(postData) {
   return new Promise((resolve, reject) => {
       postData.published = postData.published ? true : false;
       postData.id = posts.length + 1;
+      const year = new Date().getFullYear()
+      const month = new Date().getMonth()
+      const day = new Date().getDay()
+      postData.postDate = `${year}-${month}-${day}`
       posts.push(postData);
       resolve(postData);
   });
@@ -111,14 +115,13 @@ function getPostById(id) {
 
 function getPublishedPostsByCategory(category){
   return new Promise((resolve,reject)=>{
-      if(posts.length > 0){
-        let postsByCategory = posts.filter(post=>{ return post.published == true && post.category == category });
-        if(postsByCategory.length > 0) {
-          resolve(postsByCategory);
-        } else {
-          reject("no results returned");
-        }
-      }
+    const publishedPosts = posts.filter(post => post.published == true && post.category == category)
+
+    if (publishedPosts.length == 0) {
+        reject("no results returned")
+    } else {
+        resolve(publishedPosts);
+    }
   })
 }
  
