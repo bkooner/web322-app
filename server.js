@@ -114,7 +114,7 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
       req.body.featureImage = uploaded.url;
       
       blog.addPost(req.body).then(()=>{
-      res.redirect("/posts");
+      res.redirect("/blog");
       
     }).catch(err=>{
         res.status(500).send(err);
